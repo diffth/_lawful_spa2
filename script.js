@@ -129,6 +129,27 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // 경력 더보기 / 접기 인터랙션
+  const toggleCareerBtn = document.getElementById("toggleCareerBtn");
+  const moreCareers = document.getElementById("moreCareers");
+  const toggleCareerText = document.getElementById("toggleCareerText");
+  const toggleCareerIcon = document.getElementById("toggleCareerIcon");
+
+  if (toggleCareerBtn && moreCareers) {
+    toggleCareerBtn.addEventListener("click", () => {
+      const isHidden = moreCareers.classList.contains("hidden");
+      if (isHidden) {
+        moreCareers.classList.remove("hidden");
+        if (toggleCareerText) toggleCareerText.textContent = "경력 접기";
+        if (toggleCareerIcon) toggleCareerIcon.textContent = "expand_less";
+      } else {
+        moreCareers.classList.add("hidden");
+        if (toggleCareerText) toggleCareerText.textContent = "경력 전체보기 (17건)";
+        if (toggleCareerIcon) toggleCareerIcon.textContent = "expand_more";
+      }
+    });
+  }
+
   // 상담 신청 폼 제출 처리
   const consultForm = document.querySelector("form");
   if (consultForm) {
