@@ -21,18 +21,6 @@
   transform: translateY(-3px);
 }
 
-/* 히어로 변호사 이미지 자연스러운 앰비언트 그림자 */
-.hero-portrait-shadow {
-  box-shadow: 0 20px 45px rgba(0, 15, 40, 0.45), 0 0 35px rgba(0, 97, 165, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  transition: all 0.3s ease;
-}
-
-.hero-portrait-shadow:hover {
-  box-shadow: 0 25px 55px rgba(0, 15, 40, 0.55), 0 0 45px rgba(0, 97, 165, 0.35);
-  transform: translateY(-2px);
-}
-
 .clip-diagonal {
   clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
 }
