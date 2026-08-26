@@ -39,13 +39,13 @@
   }
 }
 
-/* 주색상 밑에 깔리는 반대 방향 회색 사선 레이어 */
+/* 주색상 밑에 깔리는 반대 방향 회색 사선 레이어 (완만한 5도 완화 각도) */
 .clip-diagonal-sub {
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 160px));
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 110px));
 }
 
 @media (min-width: 768px) {
   .clip-diagonal-sub {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 220px));
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 150px));
   }
 }
