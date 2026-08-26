@@ -28,7 +28,7 @@
   filter: drop-shadow(0 15px 35px rgba(0, 20, 60, 0.3));
 }
 
-/* 사선 배경 높이 100px 상향 조정 */
+/* 주색상 네이비-블루 사선 배경 */
 .clip-diagonal {
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 160px), 0 100%);
 }
@@ -36,5 +36,16 @@
 @media (min-width: 768px) {
   .clip-diagonal {
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 220px), 0 100%);
+  }
+}
+
+/* 주색상 밑에 깔리는 반대 방향 회색 사선 레이어 */
+.clip-diagonal-sub {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 120px));
+}
+
+@media (min-width: 768px) {
+  .clip-diagonal-sub {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 180px));
   }
 }
