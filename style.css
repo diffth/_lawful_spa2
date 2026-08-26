@@ -21,6 +21,13 @@
   transform: translateY(-3px);
 }
 
+/* 변호사 이미지 자연스러운 배경 블렌딩 마스크 & 소프트 페이드 */
+.hero-portrait-blend {
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0.85) 88%, rgba(0, 0, 0, 0) 100%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0.85) 88%, rgba(0, 0, 0, 0) 100%);
+  filter: drop-shadow(0 15px 35px rgba(0, 20, 60, 0.3));
+}
+
 .clip-diagonal {
   clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
 }
