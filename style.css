@@ -21,6 +21,42 @@
   transform: translateY(-3px);
 }
 
+/* 5개 퀵 카드 넥타이 컬러(와인 버건디 #8B1E2D) 호버 & 클릭 인터랙션 */
+.quick-card {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.quick-card-icon-bg {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.quick-card-icon {
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.quick-card:hover .quick-card-icon-bg {
+  background-color: rgba(139, 30, 45, 0.12);
+  transform: scale(1.1);
+}
+
+.quick-card:hover .quick-card-icon {
+  color: #8B1E2D; /* 변호사 넥타이 포인트 와인 버건디 */
+  transform: scale(1.05);
+}
+
+.quick-card:hover h4 {
+  color: #8B1E2D;
+  transition: color 0.25s ease;
+}
+
+.quick-card:active {
+  transform: scale(0.96);
+}
+
+.quick-card:active .quick-card-icon {
+  color: #6E1422;
+}
+
 /* 변호사 이미지 자연스러운 배경 블렌딩 마스크 & 소프트 페이드 */
 .hero-portrait-blend {
   mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0.85) 88%, rgba(0, 0, 0, 0) 100%);
