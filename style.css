@@ -28,12 +28,13 @@
   filter: drop-shadow(0 15px 35px rgba(0, 20, 60, 0.3));
 }
 
+/* 사선 배경 높이 100px 상향 조정 */
 .clip-diagonal {
-  clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 160px), 0 100%);
 }
 
 @media (min-width: 768px) {
   .clip-diagonal {
-    clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 220px), 0 100%);
   }
 }
