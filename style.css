@@ -11,6 +11,16 @@
   transform: translateY(-2px);
 }
 
+/* 5개 퀵 카드 전용 프리미엄 회색 그림자 */
+.card-gray-shadow {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.card-gray-shadow:hover {
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18), 0 4px 10px rgba(0, 0, 0, 0.08);
+  transform: translateY(-3px);
+}
+
 .clip-diagonal {
   clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
 }
