@@ -113,21 +113,19 @@ tailwind.config = {
 // DOM 로드 후 인터랙션 초기화
 document.addEventListener("DOMContentLoaded", () => {
   // 모바일 메뉴 버튼 인터랙션
-  const mobileMenuBtn = document.querySelector("button.md\\:hidden");
-  const navMenu = document.querySelector(".hidden.md\\:flex");
+  const mobileToggleBtn = document.getElementById("mobileMenuToggle");
+  const mobileMenu = document.getElementById("mobileMenu");
+  const mobileNavItems = document.querySelectorAll(".mobile-nav-item");
 
-  if (mobileMenuBtn && navMenu) {
-    mobileMenuBtn.addEventListener("click", () => {
-      navMenu.classList.toggle("hidden");
-      navMenu.classList.toggle("flex");
-      navMenu.classList.toggle("flex-col");
-      navMenu.classList.toggle("absolute");
-      navMenu.classList.toggle("top-full");
-      navMenu.classList.toggle("left-0");
-      navMenu.classList.toggle("w-full");
-      navMenu.classList.toggle("bg-surface");
-      navMenu.classList.toggle("p-4");
-      navMenu.classList.toggle("shadow-md");
+  if (mobileToggleBtn && mobileMenu) {
+    mobileToggleBtn.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+    });
+
+    mobileNavItems.forEach((item) => {
+      item.addEventListener("click", () => {
+        mobileMenu.classList.add("hidden");
+      });
     });
   }
 
