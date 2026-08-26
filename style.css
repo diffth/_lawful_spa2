@@ -1,0 +1,22 @@
+/* ==========================================================================
+   원본 디자인 커스텀 스타일시트 (style.css)
+   ========================================================================== */
+
+.custom-shadow {
+  box-shadow: 0px 4px 20px rgba(26, 54, 93, 0.05);
+}
+
+.hover-shadow:hover {
+  box-shadow: 0px 8px 30px rgba(26, 54, 93, 0.1);
+  transform: translateY(-2px);
+}
+
+.clip-diagonal {
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+}
+
+@media (min-width: 768px) {
+  .clip-diagonal {
+    clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+  }
+}
