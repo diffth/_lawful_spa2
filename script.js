@@ -153,7 +153,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // 상담 신청 폼 제출 처리
   const consultForm = document.querySelector("form");
   if (consultForm) {
-    const submitBtn = consultForm.querySelector("button");
+    const submitBtn = document.getElementById("consultSubmitBtn") || consultForm.querySelector("button");
+    const agreeBox = document.getElementById("privacyAgree");
+
     if (submitBtn) {
       submitBtn.addEventListener("click", (e) => {
         e.preventDefault();
