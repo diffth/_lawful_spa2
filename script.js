@@ -150,13 +150,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 상담 신청 폼 제출 처리
+  // ==========================================================================
+  // 상담 신청 폼 유효성 검사 및 제출 제어
+  // ==========================================================================
   const consultForm = document.querySelector("form");
   if (consultForm) {
     const submitBtn = document.getElementById("consultSubmitBtn") || consultForm.querySelector("button");
     const agreeBox = document.getElementById("privacyAgree");
 
-    // 개인정보 동의 전에는 제출 버튼 비활성화 상태 동기화
+    // 개인정보 수집·이용 동의 여부에 따른 제출 버튼 활성화/비활성화 상태 동기화
     if (submitBtn && agreeBox) {
       const syncSubmitState = () => {
         submitBtn.disabled = !agreeBox.checked;
@@ -165,27 +167,35 @@ document.addEventListener("DOMContentLoaded", () => {
       syncSubmitState();
     }
 
+    // 폼 제출 이벤트 리스너
     if (submitBtn) {
       submitBtn.addEventListener("click", (e) => {
         e.preventDefault();
         const nameInput = document.getElementById("name");
         const phoneInput = document.getElementById("phone");
-        
+
+        // 1. 성함 유효성 검사
         if (nameInput && !nameInput.value.trim()) {
           alert("이름을 입력해 주세요.");
           nameInput.focus();
           return;
         }
+
+        // 2. 연락처 유효성 검사
         if (phoneInput && !phoneInput.value.trim()) {
           alert("연락처를 입력해 주세요.");
           phoneInput.focus();
           return;
         }
+
+        // 3. 개인정보 수집·이용 동의 확인
         if (agreeBox && !agreeBox.checked) {
           alert("개인정보처리방침에 동의해 주세요.");
           agreeBox.focus();
           return;
         }
+
+        // 4. 정상 접수 처리 및 폼 초기화
         alert("상담 신청이 정상적으로 접수되었습니다. 신속하게 연락드리겠습니다.");
         consultForm.reset();
         submitBtn.disabled = true;
