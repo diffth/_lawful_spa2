@@ -928,7 +928,11 @@
                                                         <p class="block font-label-sm text-xs sm:text-label-sm text-on-surface-variant mb-1 font-semibold">
                                                                 개인정보 수집 · 이용 동의</p>
                                                         <div
-                                                                class="bg-surface-container-lowest border border-outline-variant rounded-lg p-3 max-h-40 overflow-y-auto text-[11px] sm:text-xs text-on-surface-variant leading-relaxed">
+                                                                id="privacyTerms"
+                                                                role="region"
+                                                                aria-label="개인정보 수집 및 이용 안내"
+                                                                tabindex="0"
+                                                                class="bg-surface-container-lowest border border-outline-variant rounded-lg p-3 max-h-40 overflow-y-auto text-[11px] sm:text-xs text-on-surface-variant leading-relaxed focus:outline-none focus:ring-1 focus:ring-secondary/50">
                                                                 <p>성범죄 사건에서 가장 중요한 것은 의뢰인의 일상이며, 이를 위해 의뢰인의 개인정보 보호는
                                                                         결코 타협할 수 없는 철칙입니다. 가능한 모든 노력을 다하여 철저히 비밀이 보장됩니다.</p>
                                                                 <dl class="mt-2 space-y-2">
@@ -956,7 +960,7 @@
                                                         </div>
                                                         <label class="flex items-start gap-2 mt-2 cursor-pointer" for="privacyAgree">
                                                                 <input class="mt-0.5 shrink-0 rounded border-outline-variant text-secondary focus:ring-1 focus:ring-secondary"
-                                                                        id="privacyAgree" type="checkbox">
+                                                                        id="privacyAgree" type="checkbox" aria-required="true" aria-describedby="privacyTerms">
                                                                 <span class="font-label-sm text-xs sm:text-label-sm text-on-surface-variant">
                                                                         개인정보처리방침에 동의합니다.
                                                                         <span class="text-error font-semibold">(필수)</span>
