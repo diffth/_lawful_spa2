@@ -156,6 +156,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const submitBtn = document.getElementById("consultSubmitBtn") || consultForm.querySelector("button");
     const agreeBox = document.getElementById("privacyAgree");
 
+    // 개인정보 동의 전에는 제출 버튼 비활성화 상태 동기화
+    if (submitBtn && agreeBox) {
+      const syncSubmitState = () => {
+        submitBtn.disabled = !agreeBox.checked;
+      };
+      agreeBox.addEventListener("change", syncSubmitState);
+      syncSubmitState();
+    }
+
     if (submitBtn) {
       submitBtn.addEventListener("click", (e) => {
         e.preventDefault();
