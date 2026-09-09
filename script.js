@@ -153,6 +153,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================================================
   // 상담 신청 폼 유효성 검사 및 제출 제어
   // ==========================================================================
+  // Web3Forms access key (https://web3forms.com 에서 수신 메일 주소를 입력하면 메일로 발급된다).
+  // 수신자 주소는 키 발급 시점에 고정되므로 코드에 담지 않는다.
+  const WEB3FORMS_ACCESS_KEY = "YOUR_WEB3FORMS_ACCESS_KEY";
   const consultForm = document.querySelector("form");
   if (consultForm) {
     const submitBtn = document.getElementById("consultSubmitBtn") || consultForm.querySelector("button");
@@ -169,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 폼 제출 이벤트 리스너
     if (submitBtn) {
-      submitBtn.addEventListener("click", (e) => {
+      submitBtn.addEventListener("click", async (e) => {
         e.preventDefault();
         const nameInput = document.getElementById("name");
         const phoneInput = document.getElementById("phone");
@@ -195,10 +198,33 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        // 4. 정상 접수 처리 및 폼 초기화
-        alert("상담 신청이 정상적으로 접수되었습니다. 신속하게 연락드리겠습니다.");
-        consultForm.reset();
-        submitBtn.disabled = true;
+        // 4. Web3Forms 로 상담 신청 전송
+        const messageInput = document.getElementById("message");
+        const botcheck = document.getElementById("botcheck");
+
+        const res = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_ACCESS_KEY,
+            subject: "[홈페이지] 법률 상담 신청 - " + nameInput.value.trim(),
+            from_name: "오세영 변호사 홈페이지",
+            성함: nameInput.value.trim(),
+            연락처: phoneInput.value.trim(),
+            "상담 내용": messageInput ? (messageInput.value.trim() || "(작성 없음)") : "(작성 없음)",
+            "개인정보 수집·이용 동의": "동의함",
+            botcheck: botcheck ? botcheck.checked : false
+          })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          alert("상담 신청이 정상적으로 접수되었습니다. 신속하게 연락드리겠습니다.");
+          consultForm.reset();
+          submitBtn.disabled = true;
+        } else {
+          alert("전송에 실패했습니다. 잠시 후 다시 시도하시거나 전화로 문의해 주세요.");
+        }
       });
     }
   }
