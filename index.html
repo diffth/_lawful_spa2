@@ -54,6 +54,80 @@
 
         <!-- External JS (Tailwind Config & Interactions) -->
         <script src="script.js"></script>
+
+        <!-- 구조화된 데이터 (구글 SEO 기본 가이드 §구조화된 데이터) -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "LegalService",
+              "@id": "https://diffth.github.io/_lawful_spa2/#organization",
+              "name": "법무법인 행복한 동행",
+              "alternateName": "오세영 변호사",
+              "url": "https://diffth.github.io/_lawful_spa2/",
+              "image": "https://diffth.github.io/_lawful_spa2/certificate.jpg",
+              "email": "ohsypro@gmail.com",
+              "telephone": "+82-2-583-6699",
+              "faxNumber": "+82-2-583-3375",
+              "taxID": "442-35-01262",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "서초중앙로 125 로이어즈타워 602호",
+                "addressLocality": "서초구",
+                "addressRegion": "서울특별시",
+                "addressCountry": "KR"
+              },
+              "areaServed": { "@type": "Country", "name": "대한민국" },
+              "knowsLanguage": "ko",
+              "founder": { "@id": "https://diffth.github.io/_lawful_spa2/#osy" },
+              "employee": { "@id": "https://diffth.github.io/_lawful_spa2/#osy" },
+              "knowsAbout": [
+                "디지털 성범죄", "카메라등이용촬영죄", "통신매체이용음란죄", "강제추행", "준강간",
+                "아동·청소년성보호법 위반", "소년보호사건", "학교폭력", "영장실질심사", "구속적부심"
+              ]
+            },
+            {
+              "@type": ["Person", "Attorney"],
+              "@id": "https://diffth.github.io/_lawful_spa2/#osy",
+              "name": "오세영",
+              "jobTitle": "대표변호사",
+              "worksFor": { "@id": "https://diffth.github.io/_lawful_spa2/#organization" },
+              "alumniOf": [
+                { "@type": "CollegeOrUniversity", "name": "서울대학교 국제경제학과" },
+                { "@type": "CollegeOrUniversity", "name": "연세대학교 대학원 법학과 (석사)" },
+                { "@type": "EducationalOrganization", "name": "사법연수원 제31기" }
+              ],
+              "hasCredential": [{
+                "@type": "EducationalOccupationalCredential",
+                "credentialCategory": "professional certification",
+                "name": "성 관련 범죄 분야 공인전문검사",
+                "recognizedBy": { "@type": "GovernmentOrganization", "name": "대검찰청" },
+                "dateCreated": "2020"
+              }],
+              "award": [
+                "국무총리 표창 (2024)",
+                "검찰총장 표창 (인권업무 유공, 2022)",
+                "성폭력 피해자 인권보장을 위한 디딤돌상 (2019)",
+                "검찰총장 표창 (과학수사업무 유공, 2012)"
+              ],
+              "knowsAbout": ["성범죄 형사변호", "디지털 성범죄 수사", "소년보호사건"],
+              "sameAs": [
+                "https://www.lawtalk.co.kr/directory/profile/5046-%EC%98%A4%EC%84%B8%EC%98%81",
+                "https://blog.naver.com/yuri8888"
+              ]
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://diffth.github.io/_lawful_spa2/#website",
+              "url": "https://diffth.github.io/_lawful_spa2/",
+              "name": "오세영 변호사",
+              "publisher": { "@id": "https://diffth.github.io/_lawful_spa2/#organization" },
+              "inLanguage": "ko"
+            }
+          ]
+        }
+        </script>
 </head>
 
 <body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden">
