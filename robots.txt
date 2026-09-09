@@ -1,0 +1,15 @@
+# 법무법인 행복한 동행 — 오세영 변호사
+# 구글 SEO 기본 가이드 / 네이버 서치어드바이저 권장 설정
+
+User-agent: *
+Allow: /
+
+# 네이버 검색로봇
+User-agent: Yeti
+Allow: /
+
+# 다음(카카오) 검색로봇
+User-agent: Daum
+Allow: /
+
+Sitemap: https://diffth.github.io/_lawful_spa2/sitemap.xml
