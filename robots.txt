@@ -12,4 +12,4 @@ Allow: /
 User-agent: Daum
 Allow: /
 
-Sitemap: https://diffth.github.io/_lawful_spa2/sitemap.xml
+Sitemap: https://lawful.co.kr/sitemap.xml
