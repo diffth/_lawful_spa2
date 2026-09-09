@@ -201,29 +201,46 @@ document.addEventListener("DOMContentLoaded", () => {
         // 4. Web3Forms 로 상담 신청 전송
         const messageInput = document.getElementById("message");
         const botcheck = document.getElementById("botcheck");
+        const originalLabel = submitBtn.textContent.trim();
 
-        const res = await fetch("https://api.web3forms.com/submit", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({
-            access_key: WEB3FORMS_ACCESS_KEY,
-            subject: "[홈페이지] 법률 상담 신청 - " + nameInput.value.trim(),
-            from_name: "오세영 변호사 홈페이지",
-            성함: nameInput.value.trim(),
-            연락처: phoneInput.value.trim(),
-            "상담 내용": messageInput ? (messageInput.value.trim() || "(작성 없음)") : "(작성 없음)",
-            "개인정보 수집·이용 동의": "동의함",
-            botcheck: botcheck ? botcheck.checked : false
-          })
-        });
-        const data = await res.json();
+        submitBtn.disabled = true;
+        submitBtn.textContent = "전송 중...";
 
-        if (data.success) {
-          alert("상담 신청이 정상적으로 접수되었습니다. 신속하게 연락드리겠습니다.");
-          consultForm.reset();
-          submitBtn.disabled = true;
-        } else {
-          alert("전송에 실패했습니다. 잠시 후 다시 시도하시거나 전화로 문의해 주세요.");
+        try {
+          // 응답이 없으면 버튼이 "전송 중..." 상태로 잠긴 채 남으므로 15초로 끊는다
+          const timeout = AbortSignal.timeout(15000);
+          const res = await fetch("https://api.web3forms.com/submit", {
+            method: "POST",
+            signal: timeout,
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify({
+              access_key: WEB3FORMS_ACCESS_KEY,
+              subject: "[홈페이지] 법률 상담 신청 - " + nameInput.value.trim(),
+              from_name: "오세영 변호사 홈페이지",
+              성함: nameInput.value.trim(),
+              연락처: phoneInput.value.trim(),
+              "상담 내용": messageInput.value.trim() || "(작성 없음)",
+              "개인정보 수집·이용 동의": "동의함",
+              botcheck: botcheck ? botcheck.checked : false
+            })
+          });
+          const data = await res.json();
+
+          if (data.success) {
+            alert("상담 신청이 정상적으로 접수되었습니다. 신속하게 연락드리겠습니다.");
+            consultForm.reset();
+          } else {
+            // 전송 실패 시 작성 내용을 잃지 않도록 폼은 그대로 둔다
+            alert("전송에 실패했습니다. 잠시 후 다시 시도하시거나 전화로 문의해 주세요.");
+          }
+        } catch (err) {
+          const msg = err.name === "TimeoutError"
+            ? "전송이 지연되고 있습니다. 잠시 후 다시 시도하시거나 전화로 문의해 주세요."
+            : "전송 중 오류가 발생했습니다. 네트워크 상태를 확인해 주세요.";
+          alert(msg);
+        } finally {
+          submitBtn.textContent = originalLabel;
+          submitBtn.disabled = !agreeBox.checked;
         }
       });
     }
