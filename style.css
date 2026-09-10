@@ -129,3 +129,12 @@
   outline: 2px solid #0061a5;
   outline-offset: 4px;
 }
+
+/* 화살표 이동은 script.js가 프레임 단위로 그린다. CSS smooth와 스냅이 끼어들면 도착 직전에 튄다. */
+.press-track {
+  scroll-behavior: auto;
+}
+
+.press-track.is-sliding {
+  scroll-snap-type: none;
+}
