@@ -969,9 +969,22 @@
                                         언론에 소개된 오세영 변호사의 활동과 전문가 코멘트입니다.
                                 </p>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+                        <!-- 카드가 늘어나면 가로로 스크롤된다. 좌우 버튼은 script.js의 pressSlider가 제어한다. -->
+                        <div class="relative">
+                                <button aria-label="이전 보도 보기"
+                                        class="press-nav hidden md:flex absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-11 h-11 items-center justify-center rounded-full bg-surface-container-lowest border border-outline-variant/40 text-primary custom-shadow hover:bg-primary hover:text-on-primary transition-colors disabled:opacity-0 disabled:pointer-events-none"
+                                        id="pressPrev" type="button">
+                                        <span class="material-symbols-outlined">chevron_left</span>
+                                </button>
+                                <button aria-label="다음 보도 보기"
+                                        class="press-nav hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-11 h-11 items-center justify-center rounded-full bg-surface-container-lowest border border-outline-variant/40 text-primary custom-shadow hover:bg-primary hover:text-on-primary transition-colors disabled:opacity-0 disabled:pointer-events-none"
+                                        id="pressNext" type="button">
+                                        <span class="material-symbols-outlined">chevron_right</span>
+                                </button>
+                                <div aria-label="언론보도 목록" class="press-track flex gap-5 sm:gap-6 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4 sm:mx-0 sm:px-0"
+                                        id="pressTrack" role="region" tabindex="0">
                                 <article
-                                        class="bg-surface-container-lowest p-6 sm:p-7 rounded-2xl border border-outline-variant/30 custom-shadow flex flex-col">
+                                        class="press-card snap-start shrink-0 w-[280px] sm:w-[320px] bg-surface-container-lowest p-6 sm:p-7 rounded-2xl border border-outline-variant/30 custom-shadow flex flex-col">
                                         <div class="flex items-center gap-2 mb-3">
                                                 <span
                                                         class="material-symbols-outlined text-secondary text-xl">newspaper</span>
@@ -982,12 +995,11 @@
                                         </div>
                                         <h3
                                                 class="font-headline-md text-base sm:text-lg text-on-surface font-bold leading-snug mb-2">
-                                                10년 간 여성인 척 남성 유인&hellip; &lsquo;남자 n번방&rsquo; 김OO 구속기소
+                                                10년 간 여성인척 남성 유인&hellip; &lsquo;남자 n번방&rsquo; 김OO 구속기소
                                         </h3>
                                         <p
                                                 class="font-body-md text-sm text-on-surface-variant leading-relaxed mb-5 flex-grow">
-                                                서울중앙지검 여성아동범죄조사부 부장검사 재직 당시, 10년간 여성으로 가장해 남성 피해자 79명의 성착취물을
-                                                제작한 이른바 &lsquo;남자 n번방&rsquo; 사건 피의자가 구속기소되었습니다.
+                                                서울중앙지검 여성아동범죄조사부 부장검사 재직 당시, 10년간 여성으로 가장해 남성 피해자 79명의 성착취물을 제작한 이른바 &lsquo;남자 n번방&rsquo; 사건 피의자가 구속기소되었습니다.
                                         </p>
                                         <a class="inline-flex items-center gap-1 text-sm text-secondary font-semibold hover:underline mt-auto w-fit"
                                                 href="/press/#segye-20210629518054">
@@ -996,7 +1008,7 @@
                                         </a>
                                 </article>
                                 <article
-                                        class="bg-surface-container-lowest p-6 sm:p-7 rounded-2xl border border-outline-variant/30 custom-shadow flex flex-col">
+                                        class="press-card snap-start shrink-0 w-[280px] sm:w-[320px] bg-surface-container-lowest p-6 sm:p-7 rounded-2xl border border-outline-variant/30 custom-shadow flex flex-col">
                                         <div class="flex items-center gap-2 mb-3">
                                                 <span
                                                         class="material-symbols-outlined text-secondary text-xl">newspaper</span>
@@ -1011,8 +1023,7 @@
                                         </h3>
                                         <p
                                                 class="font-body-md text-sm text-on-surface-variant leading-relaxed mb-5 flex-grow">
-                                                서울중앙지검 디지털 성범죄 특별수사TF 팀장 재직 당시, 텔레그램 &lsquo;박사방&rsquo; 조직원 2명을
-                                                범죄단체 가입&middot;활동과 청소년성보호법 위반 등의 혐의로 추가 기소했습니다.
+                                                서울중앙지검 디지털 성범죄 특별수사TF 팀장 재직 당시, 텔레그램 &lsquo;박사방&rsquo; 조직원 2명을 범죄단체 가입&middot;활동과 청소년성보호법 위반 등의 혐의로 추가 기소했습니다.
                                         </p>
                                         <a class="inline-flex items-center gap-1 text-sm text-secondary font-semibold hover:underline mt-auto w-fit"
                                                 href="/press/#kbs-5160432">
@@ -1021,7 +1032,7 @@
                                         </a>
                                 </article>
                                 <article
-                                        class="bg-surface-container-lowest p-6 sm:p-7 rounded-2xl border border-outline-variant/30 custom-shadow flex flex-col">
+                                        class="press-card snap-start shrink-0 w-[280px] sm:w-[320px] bg-surface-container-lowest p-6 sm:p-7 rounded-2xl border border-outline-variant/30 custom-shadow flex flex-col">
                                         <div class="flex items-center gap-2 mb-3">
                                                 <span
                                                         class="material-symbols-outlined text-secondary text-xl">newspaper</span>
@@ -1036,8 +1047,7 @@
                                         </h3>
                                         <p
                                                 class="font-body-md text-sm text-on-surface-variant leading-relaxed mb-5 flex-grow">
-                                                인천지검 여성아동범죄조사부 재직 당시, 성추행 피해자를 상대로 제기된 무고 역고소 사건에서 가해자의 무고 혐의를
-                                                밝혀 재판에 넘긴 공로로 전국성폭력상담소협의회 &lsquo;디딤돌&rsquo; 수상자에 선정되었습니다.
+                                                인천지검 여성아동범죄조사부 재직 당시, 성추행 피해자를 상대로 제기된 무고 역고소 사건에서 가해자의 무고 혐의를 밝혀 재판에 넘긴 공로로 전국성폭력상담소협의회 &lsquo;디딤돌&rsquo; 수상자에 선정되었습니다.
                                         </p>
                                         <a class="inline-flex items-center gap-1 text-sm text-secondary font-semibold hover:underline mt-auto w-fit"
                                                 href="/press/#womennews-184944">
@@ -1048,7 +1058,7 @@
                                 <!-- 기사 항목 템플릿: 아래 주석 블록을 복사해 위 <article>처럼 채워 넣으세요.
                                      기사 원문 링크는 카드가 아니라 /press/ 페이지의 해당 항목 안에 넣습니다.
                                 <article
-                                        class="bg-surface-container-lowest p-6 sm:p-7 rounded-2xl border border-outline-variant/30 custom-shadow flex flex-col">
+                                        class="press-card snap-start shrink-0 w-[280px] sm:w-[320px] bg-surface-container-lowest p-6 sm:p-7 rounded-2xl border border-outline-variant/30 custom-shadow flex flex-col">
                                         <div class="flex items-center gap-2 mb-3">
                                                 <span
                                                         class="material-symbols-outlined text-secondary text-xl">newspaper</span>
@@ -1072,6 +1082,7 @@
                                         </a>
                                 </article>
                                 -->
+                                </div>
                         </div>
                         <div class="mt-8 sm:mt-10 text-center">
                                 <a class="inline-flex items-center gap-1.5 px-5 py-3 rounded-full border border-primary/30 text-sm font-semibold text-primary hover:bg-primary hover:text-on-primary transition-colors"
