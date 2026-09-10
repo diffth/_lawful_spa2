@@ -104,3 +104,28 @@
 #privacyTerms::-webkit-scrollbar-thumb:hover {
   background: rgba(100, 116, 139, 0.7);
 }
+
+/* 언론보도 가로 슬라이드 트랙 스크롤바 */
+.press-track::-webkit-scrollbar {
+  height: 6px;
+}
+
+.press-track::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+}
+
+.press-track::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.5);
+  border-radius: 4px;
+}
+
+.press-track::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.7);
+}
+
+/* 키보드 포커스가 트랙에 들어왔을 때만 외곽선을 보여준다 */
+.press-track:focus-visible {
+  outline: 2px solid #0061a5;
+  outline-offset: 4px;
+}
