@@ -150,6 +150,89 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // 언론보도 가로 슬라이드 좌우 이동
+  const pressTrack = document.getElementById("pressTrack");
+  const pressPrev = document.getElementById("pressPrev");
+  const pressNext = document.getElementById("pressNext");
+
+  if (pressTrack && pressPrev && pressNext) {
+    // 카드 한 장 + 간격만큼 이동한다. 카드 폭이 반응형이라 매번 실제 값을 읽는다.
+    const stepSize = () => {
+      const card = pressTrack.querySelector(".press-card");
+      if (!card) return pressTrack.clientWidth;
+      const gap = parseFloat(getComputedStyle(pressTrack).columnGap) || 0;
+      return card.offsetWidth + gap;
+    };
+
+    const syncNavState = () => {
+      const maxScroll = pressTrack.scrollWidth - pressTrack.clientWidth;
+      pressPrev.disabled = pressTrack.scrollLeft <= 1;
+      pressNext.disabled = pressTrack.scrollLeft >= maxScroll - 1;
+    };
+
+    // 브라우저 기본 smooth 스크롤은 시간을 조절할 수 없고 스크롤 스냅과 부딪혀
+    // 도착 직전에 튄다. 직접 감속 곡선을 그려 이동한다.
+    const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const SCROLL_DURATION = 520;
+    let scrollAnimation = null;
+    let targetIndex = null;
+
+    const slideBy = (direction) => {
+      const step = stepSize();
+      const maxScroll = pressTrack.scrollWidth - pressTrack.clientWidth;
+      // 카드 경계가 아닌 곳에서 멈추면 스냅이 다시 켜지면서 되돌려진다.
+      // 목적지는 항상 카드 인덱스로 잡는다. 연타하면 직전 목적지에서 이어 센다.
+      const base = targetIndex !== null ? targetIndex : Math.round(pressTrack.scrollLeft / step);
+      const lastIndex = Math.ceil(maxScroll / step);
+      const index = Math.max(0, Math.min(base + direction, lastIndex));
+      const from = pressTrack.scrollLeft;
+      const to = Math.min(index * step, maxScroll);
+      if (Math.abs(to - from) < 1) return;
+
+      targetIndex = index;
+      // 연타하면 이전 애니메이션을 끊고 현재 위치에서 이어간다
+      if (scrollAnimation) cancelAnimationFrame(scrollAnimation);
+
+      if (reduceMotion.matches) {
+        pressTrack.scrollLeft = to;
+        targetIndex = null;
+        syncNavState();
+        return;
+      }
+
+      // 이동 중에는 스냅을 꺼둔다. 켜져 있으면 매 프레임 위치를 되돌린다.
+      pressTrack.classList.add("is-sliding");
+      const startedAt = performance.now();
+
+      const drawFrame = (now) => {
+        const progress = Math.min((now - startedAt) / SCROLL_DURATION, 1);
+        pressTrack.scrollLeft = from + (to - from) * easeInOutCubic(progress);
+        if (progress < 1) {
+          scrollAnimation = requestAnimationFrame(drawFrame);
+          return;
+        }
+        scrollAnimation = null;
+        targetIndex = null;
+        pressTrack.classList.remove("is-sliding");
+        syncNavState();
+      };
+
+      scrollAnimation = requestAnimationFrame(drawFrame);
+    };
+
+    pressPrev.addEventListener("click", () => slideBy(-1));
+    pressNext.addEventListener("click", () => slideBy(1));
+
+    pressTrack.addEventListener("scroll", () => {
+      // 손으로 밀었으면 화살표가 세던 목적지는 버리고 현재 위치부터 다시 센다
+      if (!scrollAnimation) targetIndex = null;
+      syncNavState();
+    }, { passive: true });
+    window.addEventListener("resize", syncNavState);
+    syncNavState();
+  }
+
   // ==========================================================================
   // 상담 신청 폼 유효성 검사 및 제출 제어
   // ==========================================================================
