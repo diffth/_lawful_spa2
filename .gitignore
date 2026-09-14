@@ -1,0 +1,2 @@
+# build.sh 가 만드는 배포 산출물. Cloudflare Pages 가 빌드할 때마다 다시 생성된다.
+dist/
