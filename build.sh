@@ -13,7 +13,7 @@
 # 숨김 파일(.git, .gitattributes 등)은 이름 규칙으로 이미 전부 빠진다.
 set -e
 
-EXCLUDE="README.md screenshot.png build.sh functions dist"
+EXCLUDE="README.md screenshot.png build.sh functions apps-script dist"
 
 rm -rf dist
 mkdir -p dist
