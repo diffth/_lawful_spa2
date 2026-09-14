@@ -236,9 +236,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================================================
   // 상담 신청 폼 유효성 검사 및 제출 제어
   // ==========================================================================
-  // Web3Forms access key (https://web3forms.com 에서 수신 메일 주소를 입력하면 메일로 발급된다).
-  // 수신자 주소는 키 발급 시점에 고정되므로 코드에 담지 않는다.
-  const WEB3FORMS_ACCESS_KEY = "YOUR_WEB3FORMS_ACCESS_KEY";
+  // 상담 신청 접수 엔드포인트. 같은 도메인의 Cloudflare Pages Function 이며,
+  // 메일 발송에 필요한 인증키와 수신 주소는 모두 함수 쪽 환경변수에 있다.
+  const CONSULT_ENDPOINT = "/api/consult";
   const consultForm = document.querySelector("form");
   if (consultForm) {
     const submitBtn = document.getElementById("consultSubmitBtn") || consultForm.querySelector("button");
@@ -281,7 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        // 4. Web3Forms 로 상담 신청 전송
+        // 4. 접수 엔드포인트로 상담 신청 전송
         const messageInput = document.getElementById("message");
         const botcheck = document.getElementById("botcheck");
         const originalLabel = submitBtn.textContent.trim();
@@ -292,14 +292,11 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
           // 응답이 없으면 버튼이 "전송 중..." 상태로 잠긴 채 남으므로 15초로 끊는다
           const timeout = AbortSignal.timeout(15000);
-          const res = await fetch("https://api.web3forms.com/submit", {
+          const res = await fetch(CONSULT_ENDPOINT, {
             method: "POST",
             signal: timeout,
             headers: { "Content-Type": "application/json", Accept: "application/json" },
             body: JSON.stringify({
-              access_key: WEB3FORMS_ACCESS_KEY,
-              subject: "[홈페이지] 법률 상담 신청 - " + nameInput.value.trim(),
-              from_name: "오세영 변호사 홈페이지",
               성함: nameInput.value.trim(),
               연락처: phoneInput.value.trim(),
               "상담 내용": messageInput.value.trim() || "(작성 없음)",
