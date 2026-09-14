@@ -58,3 +58,14 @@ function reply(body) {
     .createTextOutput(JSON.stringify(body))
     .setMimeType(ContentService.MimeType.JSON);
 }
+
+// 배포 과정에서 권한 승인 화면이 뜨지 않았을 때 쓴다. 편집기 상단에서 이 함수를
+// 골라 '실행' 하면 Gmail 권한을 묻고, 승인하면 테스트 메일이 한 통 날아간다.
+// 웹 앱 동작에는 관여하지 않으므로 확인이 끝난 뒤 지워도 된다.
+function authorizeAndTest() {
+  MailApp.sendEmail(
+    RECIPIENT,
+    "[테스트] 상담 폼 발송 권한 확인",
+    "이 메일이 도착했다면 Gmail 발송 권한이 정상입니다."
+  );
+}
