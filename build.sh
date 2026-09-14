@@ -11,6 +11,10 @@
 #
 # 배포에서 뺄 항목은 아래 EXCLUDE 에 한 줄씩 추가한다.
 # 숨김 파일(.git, .gitattributes 등)은 이름 규칙으로 이미 전부 빠진다.
+#
+# 주의: Pages 설정의 '빌드 출력 디렉터리' 가 비어 있으면 저장소 루트가 결과물로
+# 간주되어 이 스크립트가 만든 dist/ 가 통째로 무시된다. 빌드 명령만 채우고
+# 출력 디렉터리를 비워 두면 EXCLUDE 가 하나도 적용되지 않으니 함께 확인한다.
 set -e
 
 EXCLUDE="README.md screenshot.png build.sh functions apps-script dist"
