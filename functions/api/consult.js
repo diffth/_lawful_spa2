@@ -1,22 +1,21 @@
 // ==========================================================================
 // 상담 신청 접수 엔드포인트 (Cloudflare Pages Functions)
 // ==========================================================================
-// POST /api/consult 로 받은 상담 신청을 Resend 를 통해 사무소 메일로 발송한다.
-// 이 함수 자체는 상담 내용을 저장하지 않는다 — 실행 중 메모리에만 머물고,
-// 실패 응답 본문도 로그로 남기지 않는다(상담 내용이 되비쳐 담길 수 있다).
+// POST /api/consult 로 받은 상담 신청을 Google Apps Script 웹 앱에 넘기고,
+// 실제 발송은 그쪽의 Gmail 이 맡는다. 발송 코드는 apps-script/Code.gs 에 있다.
 //
-// 다만 Resend 는 발송한 메일의 내용을 자사 대시보드에 30일간 보관한다.
-// 개인정보처리방침의 위탁 표에 이 사실이 기재되어 있어야 한다.
+// 이 함수도 Apps Script 도 상담 내용을 별도로 저장하지 않는다. 메일 사본은
+// 사무소 Gmail 계정의 보낸편지함에만 남으므로 제3자에게 보관되지 않는다.
+// 실패 응답 본문은 로그로 남기지 않는다(상담 내용이 되비쳐 담길 수 있다).
 //
 // Cloudflare 대시보드 > Settings > Environment variables 에 아래 값을 등록한다.
 // 시크릿(Encrypt)으로 넣어야 하며, 저장소에는 절대 담지 않는다.
-//   RESEND_API_KEY  Resend 의 API 키 (re_ 로 시작한다)
-//   MAIL_SENDER     발신 주소. 도메인 인증을 마친 주소여야 한다
-//                   (예: "오세영 변호사 홈페이지 <no-reply@lawful.co.kr>").
-//                   인증 전 테스트에는 onboarding@resend.dev 를 쓸 수 있으나,
-//                   이 경우 Resend 계정 소유자 본인 주소로만 발송된다.
-//   MAIL_RECIPIENT  상담 신청을 받을 사무소 주소
-const RESEND_ENDPOINT = "https://api.resend.com/emails";
+//   APPS_SCRIPT_URL    Apps Script 웹 앱 배포 URL
+//                      (https://script.google.com/macros/s/.../exec)
+//   APPS_SCRIPT_TOKEN  Code.gs 의 SHARED_TOKEN 과 같은 값. 웹 앱 URL 은 공개
+//                      주소라, 이 토큰이 맞을 때만 발송하도록 막아 둔다.
+//
+// 수신 주소는 Apps Script 쪽 RECIPIENT 상수에 있다. 여기서는 다루지 않는다.
 
 // 입력 길이 상한. 지나치게 긴 본문으로 발송이 막히지 않도록 받는 쪽에서 자른다.
 const LIMITS = { name: 50, phone: 40, message: 5000 };
@@ -67,8 +66,8 @@ export async function onRequestPost({ request, env }) {
     return json({ success: false, message: "개인정보 수집·이용에 동의해 주세요." }, 400);
   }
 
-  const { RESEND_API_KEY, MAIL_SENDER, MAIL_RECIPIENT } = env;
-  if (!RESEND_API_KEY || !MAIL_SENDER || !MAIL_RECIPIENT) {
+  const { APPS_SCRIPT_URL, APPS_SCRIPT_TOKEN } = env;
+  if (!APPS_SCRIPT_URL || !APPS_SCRIPT_TOKEN) {
     // 방문자에게 설정 미비를 노출하지 않고, 전화 안내로 유도한다.
     return json({ success: false, message: "현재 접수가 어렵습니다. 전화로 문의해 주세요." }, 503);
   }
@@ -82,15 +81,13 @@ export async function onRequestPost({ request, env }) {
     "<hr><p>개인정보 수집·이용 동의: 동의함<br>접수 일시: " + escapeHtml(receivedAt) + "</p>";
 
   try {
-    const res = await fetch(RESEND_ENDPOINT, {
+    // Apps Script 웹 앱은 실행 결과를 302 로 넘겨주므로 리다이렉트를 따라가야 한다.
+    const res = await fetch(APPS_SCRIPT_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + RESEND_API_KEY
-      },
+      redirect: "follow",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        from: MAIL_SENDER,
-        to: [MAIL_RECIPIENT],
+        token: APPS_SCRIPT_TOKEN,
         subject: "[홈페이지] 법률 상담 신청 - " + name,
         html: html
       })
@@ -98,6 +95,19 @@ export async function onRequestPost({ request, env }) {
 
     if (!res.ok) {
       // 응답 본문에 상담 내용이 되비치어 담길 수 있으므로 로그로 남기지 않는다.
+      return json({ success: false, message: "전송에 실패했습니다." }, 502);
+    }
+
+    // 권한이나 배포 설정이 어긋나면 200 과 함께 로그인 안내 HTML 이 돌아온다.
+    // 그때는 JSON 파싱이 실패하므로 발송된 것으로 보지 않는다.
+    let result;
+    try {
+      result = await res.json();
+    } catch (err) {
+      return json({ success: false, message: "전송에 실패했습니다." }, 502);
+    }
+
+    if (!result.ok) {
       return json({ success: false, message: "전송에 실패했습니다." }, 502);
     }
     return json({ success: true }, 200);
