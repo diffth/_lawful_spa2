@@ -154,8 +154,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const pressTrack = document.getElementById("pressTrack");
   const pressPrev = document.getElementById("pressPrev");
   const pressNext = document.getElementById("pressNext");
+  // 좌우 버튼까지 감싸는 영역. 마우스나 포커스가 이 안에 있으면 자동 슬라이드를 멈춘다.
+  const pressArea = pressTrack && pressTrack.parentElement;
 
-  if (pressTrack && pressPrev && pressNext) {
+  if (pressTrack && pressPrev && pressNext && pressArea) {
     // 카드 한 장 + 간격만큼 이동한다. 카드 폭이 반응형이라 매번 실제 값을 읽는다.
     const stepSize = () => {
       const card = pressTrack.querySelector(".press-card");
@@ -178,14 +180,13 @@ document.addEventListener("DOMContentLoaded", () => {
     let scrollAnimation = null;
     let targetIndex = null;
 
-    const slideBy = (direction) => {
+    // 카드 경계가 아닌 곳에서 멈추면 스냅이 다시 켜지면서 되돌려진다.
+    // 목적지는 항상 카드 인덱스로 잡는다.
+    const slideToIndex = (rawIndex) => {
       const step = stepSize();
       const maxScroll = pressTrack.scrollWidth - pressTrack.clientWidth;
-      // 카드 경계가 아닌 곳에서 멈추면 스냅이 다시 켜지면서 되돌려진다.
-      // 목적지는 항상 카드 인덱스로 잡는다. 연타하면 직전 목적지에서 이어 센다.
-      const base = targetIndex !== null ? targetIndex : Math.round(pressTrack.scrollLeft / step);
       const lastIndex = Math.ceil(maxScroll / step);
-      const index = Math.max(0, Math.min(base + direction, lastIndex));
+      const index = Math.max(0, Math.min(rawIndex, lastIndex));
       const from = pressTrack.scrollLeft;
       const to = Math.min(index * step, maxScroll);
       if (Math.abs(to - from) < 1) return;
@@ -221,8 +222,96 @@ document.addEventListener("DOMContentLoaded", () => {
       scrollAnimation = requestAnimationFrame(drawFrame);
     };
 
-    pressPrev.addEventListener("click", () => slideBy(-1));
-    pressNext.addEventListener("click", () => slideBy(1));
+    // 연타하면 직전 목적지에서 이어 센다
+    const slideBy = (direction) => {
+      const base = targetIndex !== null ? targetIndex : Math.round(pressTrack.scrollLeft / stepSize());
+      slideToIndex(base + direction);
+    };
+
+    // 일정 간격으로 다음 카드를 보여주고, 끝에 닿으면 처음으로 돌아간다.
+    // 읽는 중에 화면이 움직이면 방해가 되므로 아래 상황에서는 돌리지 않는다.
+    //   - 모션 최소화 설정, 탭이 가려진 상태, 섹션이 화면 밖일 때
+    //   - 마우스가 올라가 있거나 키보드 포커스가 들어와 있을 때
+    //   - 방금 손으로 조작했을 때(잠시 쉬었다 재개)
+    const AUTO_SLIDE_INTERVAL = 5000;
+    const AUTO_SLIDE_RESUME_DELAY = 10000;
+    let autoSlideTimer = null;
+    let autoSlideResumeTimer = null;
+    let pointerInside = false;
+    let trackVisible = true;
+
+    const canAutoSlide = () =>
+      !reduceMotion.matches &&
+      !document.hidden &&
+      trackVisible &&
+      !pointerInside &&
+      !pressArea.contains(document.activeElement) &&
+      pressTrack.scrollWidth - pressTrack.clientWidth > 1;
+
+    const stopAutoSlide = () => {
+      if (!autoSlideTimer) return;
+      clearInterval(autoSlideTimer);
+      autoSlideTimer = null;
+    };
+
+    const startAutoSlide = () => {
+      stopAutoSlide();
+      // 아직 돌릴 수 없는 상태면 예약된 재개는 그대로 살려 둔다
+      if (!canAutoSlide()) return;
+      clearTimeout(autoSlideResumeTimer);
+      autoSlideTimer = setInterval(() => {
+        if (!canAutoSlide()) return stopAutoSlide();
+        const maxScroll = pressTrack.scrollWidth - pressTrack.clientWidth;
+        if (pressTrack.scrollLeft >= maxScroll - 1) slideToIndex(0);
+        else slideBy(1);
+      }, AUTO_SLIDE_INTERVAL);
+    };
+
+    // 손으로 조작한 직후에 바로 넘어가면 보던 카드를 놓친다. 한 템포 쉬고 재개한다.
+    const deferAutoSlide = () => {
+      stopAutoSlide();
+      clearTimeout(autoSlideResumeTimer);
+      autoSlideResumeTimer = setTimeout(startAutoSlide, AUTO_SLIDE_RESUME_DELAY);
+    };
+
+    pressPrev.addEventListener("click", () => {
+      slideBy(-1);
+      deferAutoSlide();
+    });
+    pressNext.addEventListener("click", () => {
+      slideBy(1);
+      deferAutoSlide();
+    });
+
+    // 트랙을 직접 미는 동작만 잡는다. scroll 이벤트는 자동 슬라이드가 그리는
+    // 매 프레임마다 발생하므로 여기에 물리면 스스로를 계속 멈춰 세운다.
+    ["pointerdown", "wheel", "touchstart", "keydown"].forEach((type) => {
+      pressTrack.addEventListener(type, deferAutoSlide, { passive: true });
+    });
+
+    pressArea.addEventListener("pointerenter", () => {
+      pointerInside = true;
+      stopAutoSlide();
+    });
+    pressArea.addEventListener("pointerleave", () => {
+      pointerInside = false;
+      startAutoSlide();
+    });
+    pressArea.addEventListener("focusin", stopAutoSlide);
+    pressArea.addEventListener("focusout", startAutoSlide);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stopAutoSlide();
+      else startAutoSlide();
+    });
+    reduceMotion.addEventListener("change", startAutoSlide);
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((entries) => {
+        trackVisible = entries[0].isIntersecting;
+        if (trackVisible) startAutoSlide();
+        else stopAutoSlide();
+      }, { threshold: 0.2 }).observe(pressTrack);
+    }
 
     pressTrack.addEventListener("scroll", () => {
       // 손으로 밀었으면 화살표가 세던 목적지는 버리고 현재 위치부터 다시 센다
@@ -231,6 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { passive: true });
     window.addEventListener("resize", syncNavState);
     syncNavState();
+    startAutoSlide();
   }
 
   // ==========================================================================
