@@ -1,0 +1,6 @@
+# Cloudflare Pages 리다이렉트 규칙.
+# build.sh 가 dist/ 로 복사하며, Pages 가 배포 결과물 루트에서 읽는다.
+#
+# 이미지를 img/ 로 모으면서 옮긴 파일들. 예전 주소로 색인된 검색 결과와
+# 외부 링크가 404 가 되지 않도록 새 위치로 넘긴다.
+/certificate.jpg  /img/certificate.jpg  301
