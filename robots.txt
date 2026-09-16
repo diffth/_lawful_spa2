@@ -12,4 +12,44 @@ Allow: /
 User-agent: Daum
 Allow: /
 
+# ==========================================================================
+# AI 검색·생성형 엔진 크롤러
+# ==========================================================================
+# 위의 "User-agent: *" 로 이미 전부 허용되지만, 어떤 크롤러를 어떤 목적으로
+# 받아들이는지 의도를 명시해 둔다. 특정 크롤러를 막을 때는 해당 줄의
+# Allow 를 Disallow 로 바꾸면 된다(그룹은 가장 구체적인 것 하나만 적용된다).
+#
+# 답변에 출처로 인용되길 원하면 아래 '검색·인용' 쪽은 열어 두어야 한다.
+
+# --- 검색 색인 및 사용자 질문 시 실시간 조회 (답변에 출처로 인용됨) ---
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# --- 모델 학습용 (인용 효과는 없고 콘텐츠가 학습에 쓰인다) ---
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+# Google-Extended 는 Gemini 학습·그라운딩에만 쓰이며,
+# 허용하든 막든 구글 검색 색인과 순위에는 영향이 없다.
+User-agent: Google-Extended
+Allow: /
+
 Sitemap: https://lawful.co.kr/sitemap.xml
