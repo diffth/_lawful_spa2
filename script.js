@@ -233,14 +233,21 @@ document.addEventListener("DOMContentLoaded", () => {
     //   - 모션 최소화 설정, 탭이 가려진 상태, 섹션이 화면 밖일 때
     //   - 마우스가 올라가 있거나 키보드 포커스가 들어와 있을 때
     //   - 방금 손으로 조작했을 때(잠시 쉬었다 재개)
+    //   - 일시정지 버튼으로 직접 멈췄을 때(다시 누를 때까지 계속 멈춤)
     const AUTO_SLIDE_INTERVAL = 5000;
     const AUTO_SLIDE_RESUME_DELAY = 10000;
+    const autoToggle = document.getElementById("pressAutoToggle");
+    const autoToggleWrap = document.getElementById("pressAutoToggleWrap");
+    const autoToggleIcon = document.getElementById("pressAutoToggleIcon");
+    const autoToggleText = document.getElementById("pressAutoToggleText");
     let autoSlideTimer = null;
     let autoSlideResumeTimer = null;
     let pointerInside = false;
     let trackVisible = true;
+    let userPaused = false;
 
     const canAutoSlide = () =>
+      !userPaused &&
       !reduceMotion.matches &&
       !document.hidden &&
       trackVisible &&
@@ -303,6 +310,33 @@ document.addEventListener("DOMContentLoaded", () => {
       if (document.hidden) stopAutoSlide();
       else startAutoSlide();
     });
+    // 자동 넘김을 직접 멈추고 켜는 버튼. 넘길 카드가 없거나 모션 최소화 설정이면
+    // 애초에 돌지 않으므로 버튼도 감춘다.
+    if (autoToggle && autoToggleWrap && autoToggleIcon && autoToggleText) {
+      const syncAutoToggle = () => {
+        const needed = !reduceMotion.matches && pressTrack.scrollWidth - pressTrack.clientWidth > 1;
+        autoToggleWrap.classList.toggle("hidden", !needed);
+        autoToggle.setAttribute("aria-pressed", String(userPaused));
+        autoToggleIcon.textContent = userPaused ? "play_arrow" : "pause";
+        autoToggleText.textContent = userPaused ? "자동 넘김 켜기" : "자동 넘김 멈춤";
+      };
+
+      autoToggle.addEventListener("click", () => {
+        userPaused = !userPaused;
+        if (userPaused) {
+          clearTimeout(autoSlideResumeTimer);
+          stopAutoSlide();
+        } else {
+          startAutoSlide();
+        }
+        syncAutoToggle();
+      });
+
+      window.addEventListener("resize", syncAutoToggle);
+      reduceMotion.addEventListener("change", syncAutoToggle);
+      syncAutoToggle();
+    }
+
     reduceMotion.addEventListener("change", startAutoSlide);
 
     if ("IntersectionObserver" in window) {
