@@ -15,13 +15,9 @@
 # 주의: Pages 설정의 '빌드 출력 디렉터리' 가 비어 있으면 저장소 루트가 결과물로
 # 간주되어 이 스크립트가 만든 dist/ 가 통째로 무시된다. 빌드 명령만 채우고
 # 출력 디렉터리를 비워 두면 EXCLUDE 가 하나도 적용되지 않으니 함께 확인한다.
-#
-# practice/ 는 변호사 검토 전인 업무분야 상세 페이지다. 검토 전 법률 콘텐츠가
-# 공개되거나 색인되지 않도록 배포에서 뺀다. 검토가 끝나면 EXCLUDE 에서 지우고
-# 홈 업무분야 카드 링크, sitemap.xml, llms.txt 에 함께 추가한다.
 set -e
 
-EXCLUDE="README.md screenshot.png build.sh functions apps-script dist practice"
+EXCLUDE="README.md screenshot.png build.sh functions apps-script dist"
 
 rm -rf dist
 mkdir -p dist
