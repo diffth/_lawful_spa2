@@ -129,6 +129,28 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // 카카오톡 상담 카드: 채널 개설 전까지 준비 중 안내 팝업을 띄운다.
+  // 채널이 열리면 카드의 href 를 채널 주소로 바꾸고 이 블록과 index.html 의 dialog 를 지운다.
+  const kakaoCard = document.getElementById("kakaoConsultCard");
+  const kakaoDialog = document.getElementById("kakaoConsultDialog");
+
+  if (kakaoCard && kakaoDialog && typeof kakaoDialog.showModal === "function") {
+    kakaoCard.addEventListener("click", (e) => {
+      e.preventDefault();
+      kakaoDialog.showModal();
+    });
+
+    // "상담 신청서 작성하기"는 닫은 뒤 원래 링크(#contact)로 이동하도록 기본 동작을 막지 않는다
+    kakaoDialog.querySelectorAll("[data-dialog-close]").forEach((el) => {
+      el.addEventListener("click", () => kakaoDialog.close());
+    });
+
+    // 팝업 바깥 어두운 영역을 누르면 닫는다
+    kakaoDialog.addEventListener("click", (e) => {
+      if (e.target === kakaoDialog) kakaoDialog.close();
+    });
+  }
+
   // 언론보도 가로 슬라이드 좌우 이동
   const pressTrack = document.getElementById("pressTrack");
   const pressPrev = document.getElementById("pressPrev");

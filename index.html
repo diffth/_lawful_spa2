@@ -54,8 +54,10 @@
         <!-- External CSS -->
         <link rel="stylesheet" href="style.css">
 
-        <!-- External JS (Tailwind Config & Interactions) -->
-        <script src="script.js"></script>
+        <!-- External JS (Tailwind Config & Interactions)
+             배포 서버가 script.js 를 브라우저에 4시간 캐시하므로, 내용을 바꾸면 ?v= 값도 올려
+             새 HTML 과 옛 스크립트가 섞이지 않게 한다. -->
+        <script src="script.js?v=20260923"></script>
 
         <!-- 구조화된 데이터 (구글 SEO 기본 가이드 §구조화된 데이터) -->
         <script type="application/ld+json">
@@ -302,19 +304,21 @@
                                                         수사 지휘
                                                         사건 & 언론 보도</p>
                                         </a>
-                                        <!-- Card 4: 법률 상담 -->
-                                        <a href="#contact"
+                                        <!-- Card 4: 카카오톡 상담
+                                             채널 개설 전이라 script.js 가 클릭을 가로채 안내 팝업을 띄운다.
+                                             스크립트가 동작하지 않으면 상담 신청 폼(#contact)으로 이동한다. -->
+                                        <a href="#contact" id="kakaoConsultCard" aria-haspopup="dialog"
                                                 class="quick-card bg-surface p-3.5 sm:p-4.5 rounded-xl flex flex-col items-center justify-center text-center card-gray-shadow aspect-square w-full md:w-[154px] cursor-pointer block">
                                                 <div
                                                         class="quick-card-icon-bg w-8 h-8 sm:w-10 sm:h-10 bg-primary-container/10 rounded-full flex items-center justify-center mb-2 sm:mb-3 mx-auto">
                                                         <span
                                                                 class="quick-card-icon material-symbols-outlined text-primary text-lg sm:text-xl">forum</span>
                                                 </div>
-                                                <p class="font-bold text-xs sm:text-sm text-primary mb-1">법률 상담</p>
+                                                <p class="font-bold text-xs sm:text-sm text-primary mb-1">카카오톡 상담</p>
                                                 <p
                                                         class="text-[10px] sm:text-[11px] text-on-surface-variant leading-tight">
                                                         1:1
-                                                        비밀 보장 맞춤 상담</p>
+                                                        비밀 문의 남기기</p>
                                         </a>
                                         <!-- Card 5: 로톡 -->
                                         <a href="https://www.lawtalk.co.kr/directory/profile/5046-%EC%98%A4%EC%84%B8%EC%98%81?source=search-lawyers-all_n&position=0&sc=normal&scq=%EC%98%A4%EC%84%B8%EC%98%81%20&referrer_group=none"
@@ -1977,6 +1981,31 @@
                         </div>
                 </div>
         </footer>
+
+        <!-- 카카오톡 상담 준비 중 안내 팝업 -->
+        <dialog id="kakaoConsultDialog" aria-labelledby="kakaoConsultTitle"
+                class="w-[calc(100%-2rem)] max-w-sm rounded-2xl p-0 bg-surface text-on-surface shadow-xl backdrop:bg-black/50">
+                <div class="px-6 pt-7 pb-6 text-center">
+                        <div
+                                class="w-12 h-12 mx-auto mb-4 bg-primary-container/10 rounded-full flex items-center justify-center">
+                                <span class="material-symbols-outlined text-primary text-2xl">forum</span>
+                        </div>
+                        <h2 id="kakaoConsultTitle" class="font-bold text-lg text-primary">카카오톡 상담 준비 중입니다</h2>
+                        <p class="mt-3 text-sm text-on-surface-variant leading-relaxed break-keep">
+                                더 편하게 문의하실 수 있도록 카카오톡 상담 채널을 개설하고 있습니다.
+                                이용에 불편을 드려 죄송합니다.<br>
+                                그동안은 상담 신청서나 전화로 문의해 주시면 신속하게 답변드리겠습니다.
+                        </p>
+                        <div class="mt-6 flex flex-col gap-2.5">
+                                <a href="#contact" data-dialog-close
+                                        class="block bg-primary text-on-primary py-3 rounded-lg font-semibold hover:bg-surface-tint transition-colors">상담 신청서 작성하기</a>
+                                <a href="tel:02-583-6699"
+                                        class="block border border-outline-variant/60 text-primary py-3 rounded-lg font-semibold hover:bg-surface-container-high transition-colors">전화 상담 02-583-6699</a>
+                                <button type="button" data-dialog-close
+                                        class="py-2 text-sm text-on-surface-variant hover:text-primary transition-colors">닫기</button>
+                        </div>
+                </div>
+        </dialog>
 
 </body>
 
